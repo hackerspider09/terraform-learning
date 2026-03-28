@@ -1,2 +1,9 @@
 */test-local-key
 */test-local-key.pub
+test-local-key
+test-local-key.pub
+
+*/.terraform
+*/terraform.tfstate.backup
+*/terraform.tfstate
+*/.terraform.lock.hcl

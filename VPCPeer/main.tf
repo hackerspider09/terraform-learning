@@ -139,6 +139,10 @@ resource "aws_route" "eu-to-mum" {
   route_table_id            = aws_route_table.rt-eu.id
   destination_cidr_block    = var.cidr_block_mum
   vpc_peering_connection_id = aws_vpc_peering_connection.req-eu-mum.id
+
+  depends_on = [
+    aws_vpc_peering_connection_accepter.acc-eu-mum
+  ]
 }
 
 resource "aws_route" "mum-to-eu" {
@@ -146,6 +150,10 @@ resource "aws_route" "mum-to-eu" {
   route_table_id            = aws_route_table.rt-mum.id
   destination_cidr_block    = var.cidr_block_eu
   vpc_peering_connection_id = aws_vpc_peering_connection.req-eu-mum.id
+
+  depends_on = [
+    aws_vpc_peering_connection_accepter.acc-eu-mum
+  ]
 }
 
 # -----------------------------Create 2 Instances---------------------------------
@@ -225,13 +233,14 @@ resource "aws_security_group" "sg-mum" {
 }
 
 # ingress rules 
-resource "aws_vpc_security_group_ingress_rule" "allow-ssh-mum" {
-  provider    = aws.mumbai-region
-  security_group_id = aws_security_group.sg-mum.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 22
-  ip_protocol       = "tcp"
-  to_port           = 22
+resource "aws_vpc_security_group_ingress_rule" "allow-all-inbound-mum" {
+  provider           = aws.mumbai-region
+  security_group_id  = aws_security_group.sg-mum.id
+  cidr_ipv4          = "0.0.0.0/0"
+  from_port          = 0
+  to_port            = 0
+  ip_protocol        = "-1" # means all protocols
+  description        = "Allow all inbound traffic"
 }
 
 # egress
@@ -239,6 +248,8 @@ resource "aws_vpc_security_group_egress_rule" "allow-all-traffic-mum" {
   provider    = aws.mumbai-region
   security_group_id = aws_security_group.sg-mum.id
   cidr_ipv4         = "0.0.0.0/0"
+  from_port          = 0
+  to_port            = 0
   ip_protocol       = "-1"
 }
 

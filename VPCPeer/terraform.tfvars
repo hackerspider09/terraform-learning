@@ -5,4 +5,4 @@ req_region = "eu-north-1"
 acc_region = "ap-south-1"
 
 
-public_key_path = "/mnt/HddStorage/course/DevOps/Strata/Terraform/VPCPeer/test-local-key.pub"
+public_key_path = "/mnt/HddStorage/Learning/Terraform/VPCPeer/test-local-key.pub"
