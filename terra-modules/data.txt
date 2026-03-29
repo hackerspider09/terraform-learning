@@ -1,0 +1,5 @@
+    Hello world
+    module path: modules/createFile
+    workspace: default
+    root module path: .
+    work dir: /mnt/HddStorage/Learning/Josh-Batch/Terraform/Terraform_Scripts/terra-modules
