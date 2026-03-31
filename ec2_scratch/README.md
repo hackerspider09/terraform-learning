@@ -60,3 +60,9 @@ Example output:
 ---
 
 
+# Visualize dependency tree
+```
+terraform graph
+# sudo apt install graphviz (if dot is not present)
+terraform graph | dot -Tpng > graph.png
+```
