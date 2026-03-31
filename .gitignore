@@ -7,3 +7,10 @@ test-local-key.pub
 */terraform.tfstate.backup
 */terraform.tfstate
 */.terraform.lock.hcl
+remote-backend/create-backend/.terraform.lock.hcl
+remote-backend/create-backend/terraform.tfstate
+remote-backend/*/.terraform
+remote-backend/create-backend/terraform.tfstate.backup
+.gitignore
+remote-backend/proj2/.terraform.lock.hcl
+remote-backend/proj1/.terraform.lock.hcl

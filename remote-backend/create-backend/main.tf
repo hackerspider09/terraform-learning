@@ -1,7 +1,7 @@
 # S3 for statefile
 
 resource "aws_s3_bucket" "backend_s3" {
-  bucket = "terra-s3"
+  bucket = "terra-s3-1-4-2026"
 
   tags = {
     Name        = "Terra-s3"
@@ -14,13 +14,10 @@ resource "aws_s3_bucket" "backend_s3" {
 resource "aws_dynamodb_table" "backend_dyno" {
   name           = "terra-dyno"
   billing_mode   = "PAY_PER_REQUEST"
-  read_capacity  = 20
-  write_capacity = 20
-  hash_key       = "UserId"
-  range_key      = "GameTitle"
+  hash_key       = "LockID"
 
   attribute {
-    name = "UserId"
+    name = "LockID"
     type = "S"
   }
 }
