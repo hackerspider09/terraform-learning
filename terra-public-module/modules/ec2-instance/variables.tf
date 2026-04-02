@@ -11,7 +11,7 @@ variable "subnet_id"{
 }
 
 variable "security_group_ids"{
-  type = list
+  type = list(string)
 }
 
 variable "instance_name"{
@@ -19,7 +19,7 @@ variable "instance_name"{
 }
 
 variable "tags" {
-  type = map
+  type = map(string)
 }
 
 
