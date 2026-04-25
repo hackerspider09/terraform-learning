@@ -1,5 +1,28 @@
 # Terraform Scripts and notes
 
+## 📚 Concepts Index
+
+### Core Concepts
+- [Terraform State & Commands](#terraform-state-file) - State files, lock files, and common commands
+- [Terraform Plan Symbols](#terraform-plan-symbols) - Understanding +, -, ~ symbols
+
+### Practical Implementations
+- [S3 Bucket](./s3/) - Basic S3 bucket creation
+- [EC2 Instance](./default_ec2/) - Default EC2 setup
+- [EC2 with VPC](./ec2_scratch/) - EC2 with custom VPC, AMI queries, dependency graphs
+- [VPC Peering](./VPCPeer/) - VPC peering configuration
+
+### Advanced Topics
+- [Terraform Modules](./terra-modules/) - Creating and using local modules
+- [Public Modules](./terra-public-module/) - Using public registry modules, for_each vs dynamic blocks
+- [Data Sources](./terra-data/) - Reading existing infrastructure with data blocks
+- [Import Resources](./terra-import/) - Importing existing AWS resources into Terraform
+- [Expressions & Functions](./terra-expressions/) - Variables, loops, conditions, string functions
+- [Remote Backend](./remote-backend/) - S3 backend configuration for state management
+- [AWS EKS](./aws_eks_module/) - EKS cluster provisioning with modules
+
+---
+
 # AWS
 
 Configure account on CLI by aws configure command and it stores the credentials in ~/.aws/credentials and configuration in ~/.aws/config
