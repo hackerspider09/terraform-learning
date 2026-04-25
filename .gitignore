@@ -7,5 +7,6 @@ test-local-key.pub
 **/terraform.tfstate.backup
 **/terraform.tfstate
 
-# Organization summary
+# Notes
 ORGANIZATION_SUMMARY.md
+TerraformArticle.odt
