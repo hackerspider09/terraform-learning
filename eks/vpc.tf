@@ -16,17 +16,17 @@ module "vpc" {
   enable_dns_hostnames = true
   enable_dns_support = true
 
-  # enable_dns_hostnames = true
-
   # These tags are for k8s so it can provision load balancers to tell controller to find which subnet to use (resource discovery)
   # public subnets for internet facing LB
   # private for internal LB
   public_subnet_tags = {
-    "kubernetes.io/role/elb" = 1
+    "kubernetes.io/role/elb" = "1"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
 
   private_subnet_tags = {
-    "kubernetes.io/role/internal-elb" = 1
+    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/cluster/${var.cluster_name}" = "shared"
   }
 
   tags = local.common_tags
