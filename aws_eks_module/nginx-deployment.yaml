@@ -17,12 +17,12 @@ spec:
       labels:
         app: web
 
-      spec:
-        containers:
-          - name: nginx
-            image: nginx:latest
-            ports:
-              - containerPort: 80
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - containerPort: 80
 
 ---
 

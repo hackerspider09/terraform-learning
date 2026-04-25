@@ -15,13 +15,11 @@ module "eks" {
   addons = {
     vpc-cni = {
       before_compute = true
-      most_recent = true
     }
-    kube-proxy = {
-      most_recent = true
-    }
-    coredns = {
-      most_recent = true
+    kube-proxy = {}
+    coredns = {}
+    eks-pod-identity-agent = {
+      before_compute = true
     }
   }
 

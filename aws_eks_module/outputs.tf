@@ -9,3 +9,7 @@ output "cluster_endpoint" {
 output "cluster_region" {
   value = var.region
 }
+
+output "kube_config_cmd" {
+  value = "aws eks update-kubeconfig --region ${var.region} --name ${var.region}"
+}
