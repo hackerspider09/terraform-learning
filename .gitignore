@@ -11,3 +11,8 @@ test-local-key.pub
 ORGANIZATION_SUMMARY.md
 TerraformArticle.odt
 test.tf
+
+# Ignore tfvars files as they may contain sensitive data
+*.tfvars
+*.tfvars.json
+*auto.tfvars
