@@ -1,188 +1,49 @@
-# Terraform Scripts and notes
+# Terraform Scripts and Reference
 
-## 📚 Concepts Index
-
-### Core Concepts
-- [Terraform State & Commands](#terraform-state-file) - State files, lock files, and common commands
-- [Terraform Plan Symbols](#terraform-plan-symbols) - Understanding +, -, ~ symbols
-
-### Practical Implementations
-- [S3 Bucket](./s3/) - Basic S3 bucket creation
-- [EC2 Instance](./default_ec2/) - Default EC2 setup
-- [EC2 with VPC](./ec2_scratch/) - EC2 with custom VPC, AMI queries, dependency graphs
-- [VPC Peering](./VPCPeer/) - VPC peering configuration
-
-### Advanced Topics
-- [Terraform Modules](./terra-modules/) - Creating and using local modules
-- [Public Modules](./terra-public-module/) - Using public registry modules, for_each vs dynamic blocks
-- [Data Sources](./terra-data/) - Reading existing infrastructure with data blocks
-- [Import Resources](./terra-import/) - Importing existing AWS resources into Terraform
-- [Expressions & Functions](./terra-expressions/) - Variables, loops, conditions, string functions
-- [Remote Backend](./remote-backend/) - S3 backend configuration for state management
-- [AWS EKS](./aws_eks_module/) - EKS cluster provisioning with modules
+This repository serves as a practical reference for learning and utilizing HashiCorp Terraform in AWS environments. It contains structured notes and runnable infrastructure scripts.
 
 ---
 
-# AWS
+## 📖 Documentation Library
 
-Configure account on CLI by aws configure command and it stores the credentials in ~/.aws/credentials and configuration in ~/.aws/config
+The `docs/` directory contains a modular guide covering foundational IaC concepts, state management, and lifecycle rules. It is designed to be used as a quick reference during daily work.
 
-### Add another profile
+### Core Concepts & Setup
+- [01. Introduction and Core Concepts](./docs/01-introduction-and-core-concepts.md) - IaC principles, architecture, and workflow.
+- [02. Installation and Authentication](./docs/02-installation-and-authentication.md) - AWS CLI config, profiles, IAM roles, and OIDC.
+- [03. State Management and Backends](./docs/03-state-management-and-backends.md) - The state file, lock file, and S3/DynamoDB remote backends.
+- [04. Commands and CLI Reference](./docs/04-commands-and-cli-reference.md) - Common commands, state commands, and `plan` symbols (`+`, `-`, `~`).
 
-```
-aws configure --profile username
-```
+### Writing Terraform (HCL)
+- [05. HCL Syntax and Structure](./docs/05-hcl-syntax-and-structure.md) - Blocks, identifiers, comments, and `path` references.
+- [06. Providers and Resources](./docs/06-providers-and-resources.md) - Aliases, meta-arguments (`depends_on`, `count`, `for_each`), and `lifecycle`.
+- [07. Variables, Locals, and Outputs](./docs/07-variables-locals-and-outputs.md) - Variable validation, DRY code with locals, and sensitive outputs.
+- [08. Data Sources and Imports](./docs/08-data-sources-and-imports.md) - Reading existing infra and declarative `import` blocks.
+- [09. Expressions and Loops](./docs/09-expressions-and-loops.md) - Conditionals, splat `[*]`, `for` loops, and `dynamic` blocks.
+- [10. Functions and String Operations](./docs/10-functions-and-operations.md) - Using `file()`, `templatefile()`, string/list manipulations, and network functions.
 
-### Use --profile flag for command
-
-```
-aws s3 ls --profile username
-```
-
-### Verify profile
-
-```
-aws sts get-caller-identity
-```
-
-### For crnt session set env AWS_PROFILE
-
-```
-export AWS_PROFILE=user1
-```
----
-
-# Terraform State File
-
-Terraform uses a state file to keep track of the infrastructure it manages. This file is usually named `terraform.tfstate`.
-
-The state file contains:
-
-- Resource IDs and names
-- Current values of resource attributes
-- Dependencies between resources
-- Mapping between Terraform configuration and real infrastructure
-- Outputs and metadata
-
-Terraform reads this file during `plan` and `apply` to determine what has changed.
-
-Do not edit the state file manually. Incorrect changes can corrupt the state and cause Terraform to create, update, or delete the wrong resources.
-
-Do not commit the state file to Git because it may contain sensitive information such as passwords, access keys, secrets, and infrastructure details.
-
-## Terraform Lock File
-
-Terraform also creates a lock file named `.terraform.lock.hcl`.
-
-The lock file stores:
-
-- Exact versions of providers being used
-- Checksums for provider verification
-
-This ensures everyone using the project installs the same provider versions.
-
-Unlike the state file, the lock file should be committed to Git.
-
-> “State file” is the general term
-> `terraform.tfstate` is the default filename Terraform uses for that file
+### Architecture & Operations
+- [11. Modules and Workspaces](./docs/11-modules-and-workspaces.md) - Structuring child modules, public registries, and environment workspaces.
+- [12. Utility Providers and Provisioners](./docs/12-utility-providers-and-provisioners.md) - Using `random`, `tls`, `local`, `null`, and remote-exec provisioners.
+- [13. Best Practices and Troubleshooting](./docs/13-best-practices-and-troubleshooting.md) - Directory structures, CI/CD, secret management, and `TF_LOG` debugging.
 
 ---
 
-# Terraform plan symbols
+## 🛠️ Practical Implementations & Scripts
 
-~, -, + are used in output of terraform plan indicates specific type of changes intended to make to infra
+These directories contain working Terraform configurations demonstrating the concepts covered in the documentation library.
 
-### +(Create):
+### Basic Infrastructure
+- **[S3 Bucket](./s3/)** - Basic S3 bucket creation and configuration.
+- **[EC2 Instance](./default_ec2/)** - Default, single EC2 setup.
+- **[EC2 with VPC](./ec2_scratch/)** - EC2 deployed within a custom VPC, demonstrating AMI queries and dependency graphs.
+- **[VPC Peering](./VPCPeer/)** - Setting up VPC peering connections.
 
-- This indicates terraform will create new resource that doesn't exists in infra
-
-![](assets/create.png)
-
-### -(Destroy):
-
-- This indicates terraform will destroy from resource as per config
-
-![](assets/destroy.png)
-
-### ~(Update):
-
-- This indicates terraform will update resource or try to modify existing resource without recreating or deleting
-
-![](assets/updateinplace.png)
-
----
-# Common Terraform Commands
-
-- `terraform init`
-  Initializes the Terraform working directory and downloads required providers/modules.
-
-  Common flags:
-
-  - `-upgrade` → Upgrade provider and module versions
-  - `-backend=false` → Skip backend initialization
-  - `-reconfigure` → Reconfigure backend settings
-  - `-migrate-state` → Migrate existing state to a new backend
-- `terraform validate`
-  Validates Terraform configuration files for syntax and internal consistency.
-
-  Common flags:
-
-  - `-json` → Output validation results in JSON format
-  - `-no-color` → Disable colored output
-- `terraform plan`
-  Creates an execution plan showing what Terraform will add, change, or destroy.
-
-  Common flags:
-
-  - `-out=tfplan` → Save the plan to a file
-  - `-var="key=value"` → Set a variable value
-  - `-var-file="terraform.tfvars"` → Load variables from a file
-  - `-destroy` → Create a plan to destroy infrastructure
-  - `-target=<resource>` → Plan changes for a specific resource only
-  - `-refresh=false` → Skip refreshing state before planning
-- `terraform apply`
-  Applies the planned infrastructure changes.
-
-  Common flags:
-
-  - `-auto-approve` → Skip interactive approval prompt
-  - `tfplan` → Apply a previously saved plan file
-  - `-var="key=value"` → Set a variable value
-  - `-var-file="terraform.tfvars"` → Load variables from a file
-  - `-target=<resource>` → Apply changes to a specific resource only
-  - `-destroy` → Destroy infrastructure instead of creating/updating
-
-### Example
-
-```bash
-terraform init -upgrade
-terraform validate
-terraform plan -out=tfplan
-terraform apply tfplan
-```
-
----
-# Useful Terraform State Commands
-
-- `terraform show`
-  Displays the current Terraform state in a human-readable format.
-
-![](assets/terra_show.png)
-
-- `terraform state list`
-  Lists all resources currently managed by Terraform.
-- `terraform state show aws_s3_bucket.<name>`
-  Shows detailed information about a specific S3 bucket resource.
-- `terraform state show aws_instance.<name>`
-  Shows detailed information about a specific EC2 instance resource.
-
-![](assets/terra_list_and_stateshow.png)
-
-### Example
-
-```bash
-terraform show
-terraform state list
-terraform state show aws_s3_bucket.my_bucket
-terraform state show aws_instance.my_server
-```
+### Advanced Implementations
+- **[Terraform Modules](./terra-modules/)** - Creating, structuring, and consuming local child modules.
+- **[Public Modules](./terra-public-module/)** - Using modules from the public Terraform Registry, comparing `for_each` vs `dynamic` blocks.
+- **[Data Sources](./terra-data/)** - Reading existing infrastructure using `data` blocks.
+- **[Import Resources](./terra-import/)** - Demonstrating how to bring existing AWS resources into Terraform management.
+- **[Expressions & Functions](./terra-expressions/)** - Practical usage of variables, loops, conditions, and string functions.
+- **[Remote Backend](./remote-backend/)** - S3 and DynamoDB remote backend configuration for state locking and management.
+- **[AWS EKS](./aws_eks_module/)** - EKS Kubernetes cluster provisioning using official modules.
